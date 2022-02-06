@@ -15,10 +15,12 @@ public class RigidBodyDynamics : MonoBehaviour
 
 	public float linear_decay = 0.999f;                // for velocity decay
     public float angular_decay = 0.98f;
-    float restitution = 0.5f;                 // for collision
-    float uT = 0.5f;
-    Vector3 gravity = new Vector3(0, -10, 0); //for gravity
+    public float restitution = 0.5f;                 // for collision
+    public float uT = 0.5f;
+    public Vector3 gravity = new Vector3(0, -10, 0); //for gravity
     Vector3[] vertices;
+
+	public float m = 1;
 
     // Start is called before the first frame update
     void Start()
@@ -26,7 +28,7 @@ public class RigidBodyDynamics : MonoBehaviour
         Mesh mesh = GetComponent<MeshFilter>().mesh;
         vertices = mesh.vertices;
 
-        float m = 1;
+        //float m = 1;
         mass = 0;
         for (int i = 0; i < vertices.Length; i++)
         {
@@ -199,6 +201,13 @@ public class RigidBodyDynamics : MonoBehaviour
         }
     }
 
+	public Vector4 Multi_Granlam(Vector4 Q1,Vector4 Q2)//定义四元数的乘法函数 Gralama积
+    {
+    	float a = Q1.x * Q2.x - Vector3.Dot(new Vector3(Q1.y, Q1.z, Q1.w), new Vector3(Q2.y, Q2.z, Q2.w));//
+    	Vector3 u = Q1.x * new Vector3(Q2.y, Q2.z, Q2.w) + Q2.x * new Vector3(Q1.y, Q1.z, Q1.w) + Vector3.Cross(new Vector3(Q1.y, Q1.z, Q1.w), new Vector3(Q2.y, Q2.z, Q2.w));
+    	return new Vector4(a,u.x,u.y,u.z);
+    }
+
     // Update is called once per frame
     void Update()
     {
@@ -215,6 +224,7 @@ public class RigidBodyDynamics : MonoBehaviour
             w = new Vector3(0.5f, 0, 0);
             launched = true;
         }
+
         if (launched == true)
         {
             // Part I: Update velocities
@@ -222,28 +232,45 @@ public class RigidBodyDynamics : MonoBehaviour
             //Matrix4x4 R0=Matrix4x4.Rotate(transform.rotation);
             w = angular_decay * w;
             // Part II: Collision Impulse
-            //Collision_Impulse(new Vector3(0, -1.097432f, 0), new Vector3(0, 1, 0));
+            Collision_Impulse(new Vector3(0, -1.097432f, 0), new Vector3(0, 1, 0));
             //Collision_Impulse(new Vector3(2, 0, 0), new Vector3(-1, 0, 0));
             // Part III: Update position & orientation
             //Update linear status
             Vector3 x = transform.position;
             x = x + v * dt;
             //Update angular status
-            Quaternion q = transform.rotation;
+            Quaternion originalQ = transform.rotation;
+			Vector3 vw = w * dt / 2;
+			Vector4 originalQ_Normal = new Vector4(originalQ.w, originalQ.x, originalQ.y, originalQ.z);
+			Vector4 originalQ_W = new Vector4(0, vw.x, vw.y, vw.z);
+			Vector4 final = originalQ_Normal + Multi_Granlam(originalQ_W,originalQ_Normal);
+
+			//float q0 = originalQ.w;
+			//float q1 = originalQ.x;
+			//float q2 = originalQ.y;
+			//float q3 = originalQ.z;
+			//
+			//float new_qw = -w.y * q1 - w.y * q2 - w.z * q3;
+			//float new_qx = w.x * q0 - w.y * q3 + w.z * q2;
+			//float new_qy = w.x * q3 + w.y * q0 - w.z * q1;
+			//float new_qz = -w.x * q2 + w.y * q1 + w.z * q0;
+			
             //做四元数的叉乘[s1s2-v1v2 s1v2+s2v1+v1xv2]
             //实部
-            float sq = q.w;
-            //虚部
-            Vector3 vq = new Vector3(q.x, q.y, q.z);
-            //q1=q0+[0,dt/2*w]xq0
-            Vector3 vw = w * dt / 2;
-            float sdq = -Dot_Product(vw, vq);
-            Vector3 temp = Get_Cross_Matrix(vw) * vq;
-            Vector3 svq = (sq * vw) + temp;
-            Quaternion q1 = new Quaternion(vq[0] + svq[0], vq[1] + svq[1], vq[2] + svq[2], sq + sdq);
+            Quaternion new_q = new Quaternion(final.y, final.z, final.w, final.x);
+
+			//float sq = originalQ.w;
+            ////虚部
+            //Vector3 vq = new Vector3(originalQ.x, originalQ.y, originalQ.z);
+            ////q1=q0+[0,dt/2*w]xq0
+            //Vector3 vw = w * dt / 2;
+            //float sdq = -Dot_Product(vw, vq);
+            //Vector3 temp = Get_Cross_Matrix(vw) * vq;
+            //Vector3 svq = (sq * vw) + temp;
+            //Quaternion new_q = new Quaternion(vq[0] + svq[0], vq[1] + svq[1], vq[2] + svq[2], sq + sdq);
 
             transform.position = x;
-            transform.rotation = q1;
+            transform.rotation = new_q;
         }        
     }
 }

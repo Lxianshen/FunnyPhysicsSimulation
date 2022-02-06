@@ -241,7 +241,7 @@ MeshCollider:
   m_GameObject: {fileID: 80823317}
   m_Material: {fileID: 0}
   m_IsTrigger: 0
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 3
   m_Convex: 0
   m_CookingOptions: 30
@@ -383,8 +383,8 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 428027594}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 1, z: -10}
+  m_LocalRotation: {x: 0.004889197, y: 0.98862237, z: -0.03294276, w: 0.14668585}
+  m_LocalPosition: {x: -0.86301184, y: 0.8946967, z: 5.8507957}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -418,7 +418,7 @@ MeshCollider:
   m_GameObject: {fileID: 1315965185}
   m_Material: {fileID: 0}
   m_IsTrigger: 0
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 3
   m_Convex: 0
   m_CookingOptions: 30
@@ -549,17 +549,17 @@ PrefabInstance:
     - target: {fileID: -4216859302048453862, guid: 760815bdb30020141b692ee072ef586e,
         type: 3}
       propertyPath: m_LocalScale.x
-      value: 20
+      value: 40
       objectReference: {fileID: 0}
     - target: {fileID: -4216859302048453862, guid: 760815bdb30020141b692ee072ef586e,
         type: 3}
       propertyPath: m_LocalScale.y
-      value: 20
+      value: 40
       objectReference: {fileID: 0}
     - target: {fileID: -4216859302048453862, guid: 760815bdb30020141b692ee072ef586e,
         type: 3}
       propertyPath: m_LocalScale.z
-      value: 20
+      value: 40
       objectReference: {fileID: 0}
     - target: {fileID: -1504981713932161579, guid: 760815bdb30020141b692ee072ef586e,
         type: 3}
@@ -593,3 +593,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   linear_decay: 0.999
   angular_decay: 0.98
+  restitution: 0.5
+  uT: 0.5
+  gravity: {x: 0, y: -10, z: 0}
+  m: 1
