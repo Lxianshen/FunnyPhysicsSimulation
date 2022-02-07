@@ -478,7 +478,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1315965185}
   m_LocalRotation: {x: 0.7071068, y: 0, z: 0, w: 0.7071068}
-  m_LocalPosition: {x: -4.7936335, y: -1.0974315, z: -10.57}
+  m_LocalPosition: {x: -4.7936335, y: -1.0974315, z: -10.56}
   m_LocalScale: {x: 2.7498, y: 2.7498, z: 2.7498}
   m_Children: []
   m_Father: {fileID: 0}
@@ -571,6 +571,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Chicken
       objectReference: {fileID: 0}
+    - target: {fileID: -927199367670048503, guid: 760815bdb30020141b692ee072ef586e,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 760815bdb30020141b692ee072ef586e, type: 3}
 --- !u!1 &1338265826 stripped
@@ -592,8 +597,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   linear_decay: 0.999
-  angular_decay: 0.98
+  angular_decay: 0.88
   restitution: 0.5
   uT: 0.5
   gravity: {x: 0, y: -10, z: 0}
-  m: 1
+  m: 0.46

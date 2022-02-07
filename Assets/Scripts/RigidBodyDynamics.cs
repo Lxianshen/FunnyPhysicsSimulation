@@ -214,13 +214,13 @@ public class RigidBodyDynamics : MonoBehaviour
         //Game Control
         if (Input.GetKey("r"))
         {
-            transform.position = new Vector3(0, 0.6f, 0);
+            transform.position = new Vector3(0, 2.6f, -5.24f);
             restitution = 0.5f;
             launched = false;
         }
         if (Input.GetKey("l"))
         {
-            v = new Vector3(5, 2, 0);
+            v = new Vector3(0, 2, -8);
             w = new Vector3(0.5f, 0, 0);
             launched = true;
         }
@@ -233,7 +233,7 @@ public class RigidBodyDynamics : MonoBehaviour
             w = angular_decay * w;
             // Part II: Collision Impulse
             Collision_Impulse(new Vector3(0, -1.097432f, 0), new Vector3(0, 1, 0));
-            //Collision_Impulse(new Vector3(2, 0, 0), new Vector3(-1, 0, 0));
+            Collision_Impulse(new Vector3(0, 0, -10.56f), new Vector3(0, 0, 1));
             // Part III: Update position & orientation
             //Update linear status
             Vector3 x = transform.position;
