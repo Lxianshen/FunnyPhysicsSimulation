@@ -49,29 +49,29 @@ public class implicit_model : MonoBehaviour
         mesh.RecalculateNormals();
 
 
-        //Construct the original E
-        int[] _E = new int[triangles.Length * 2];
-        for (int i = 0; i < triangles.Length; i += 3)
-        {
-            _E[i * 2 + 0] = triangles[i + 0];
-            _E[i * 2 + 1] = triangles[i + 1];
-            _E[i * 2 + 2] = triangles[i + 1];
-            _E[i * 2 + 3] = triangles[i + 2];
-            _E[i * 2 + 4] = triangles[i + 2];
-            _E[i * 2 + 5] = triangles[i + 0];
-        }
+		//Construct the original E
+		int[] _E = new int[triangles.Length * 2];
+		for (int i = 0; i < triangles.Length; i += 3)
+		{
+		    _E[i * 2 + 0] = triangles[i + 0];
+		    _E[i * 2 + 1] = triangles[i + 1];
+		    _E[i * 2 + 2] = triangles[i + 1];
+		    _E[i * 2 + 3] = triangles[i + 2];
+		    _E[i * 2 + 4] = triangles[i + 2];
+		    _E[i * 2 + 5] = triangles[i + 0];
+		}
         //Reorder the original edge list
         for (int i = 0; i < _E.Length; i += 2)
             if (_E[i] > _E[i + 1])
                 Swap(ref _E[i], ref _E[i + 1]);
         //Sort the original edge list using quicksort
         Quick_Sort(ref _E, 0, _E.Length / 2 - 1);
-
+		
         int e_number = 0;
         for (int i = 0; i < _E.Length; i += 2)
             if (i == 0 || _E[i + 0] != _E[i - 2] || _E[i + 1] != _E[i - 1])
                 e_number++;
-
+		
         E = new int[e_number * 2];
         for (int i = 0, e = 0; i < _E.Length; i += 2)
             if (i == 0 || _E[i + 0] != _E[i - 2] || _E[i + 1] != _E[i - 1])
@@ -80,7 +80,7 @@ public class implicit_model : MonoBehaviour
                 E[e * 2 + 1] = _E[i + 1];
                 e++;
             }
-
+		
         L = new float[E.Length / 2];
         for (int e = 0; e < E.Length / 2; e++)
         {
@@ -88,7 +88,7 @@ public class implicit_model : MonoBehaviour
             int v1 = E[e * 2 + 1];
             L[e] = (X[v0] - X[v1]).magnitude;
         }
-
+		
         V = new Vector3[X.Length];
         for (int i = 0; i < V.Length; i++)
             V[i] = new Vector3(0, 0, 0);
@@ -195,7 +195,7 @@ public class implicit_model : MonoBehaviour
         Vector3[] X_hat = new Vector3[X.Length];
         Vector3[] G = new Vector3[X.Length];
         float w=1;
-
+		
         //Initial Setup.
         float dt = 1 / t;
         for (int i = 0; i < V.Length; i++)
@@ -207,43 +207,43 @@ public class implicit_model : MonoBehaviour
             last_X[i] = new Vector3(0, 0, 0);
         }
         //Using Chebyshev Acceleration
-        for (int k = 0; k < 32; k++)
-        {
-            if (k == 0)
-            {
-                w = 1;
-            }
-            else if (k == 1)
-            {
-                w = 2 / (2 - rho * rho);
-            }
-            else
-            {
-                w = 4 / (4 - rho * rho * w);
-            }
-            Get_Gradient(X, X_hat, dt, G);
-            //Update X by gradient.
-            for (int i = 0; i < X.Length; i++)
-            {
-                if (i == 0 || i == 20) continue;
-                Vector3 old_X = X[i];
-                X[i] = X[i] - 1 / (dt * dt * mass + 4 * spring_k) * G[i];
-                X[i] = w * X[i] + (1 - w) * last_X[i];
-                last_X[i] = old_X;
-            }
-        }
-        //Without Chebyshev Acceleration
-        //for (int k = 0; k < 16; k++)
+        //for (int k = 0; k < 32; k++)
         //{
+        //    if (k == 0)
+        //    {
+        //        w = 1;
+        //    }
+        //    else if (k == 1)
+        //    {
+        //        w = 2 / (2 - rho * rho);
+        //    }
+        //    else
+        //    {
+        //        w = 4 / (4 - rho * rho * w);
+        //    }
         //    Get_Gradient(X, X_hat, dt, G);
         //    //Update X by gradient.
         //    for (int i = 0; i < X.Length; i++)
         //    {
         //        if (i == 0 || i == 20) continue;
+        //        Vector3 old_X = X[i];
         //        X[i] = X[i] - 1 / (dt * dt * mass + 4 * spring_k) * G[i];
+        //        X[i] = w * X[i] + (1 - w) * last_X[i];
+        //        last_X[i] = old_X;
         //    }
         //}
-
+        //Without Chebyshev Acceleration
+        for (int k = 0; k < 16; k++)
+        {
+            Get_Gradient(X, X_hat, dt, G);
+            //Update X by gradient.
+            for (int i = 0; i < X.Length; i++)
+            {
+                if (i == 0 || i == 20) continue;
+                X[i] = X[i] - 1 / (dt * dt * mass + 4 * spring_k) * G[i];
+            }
+        }
+		
         //Finishing.
         for (int i = 0; i < X.Length; i++)
         {
@@ -251,7 +251,7 @@ public class implicit_model : MonoBehaviour
             V[i] += dt * (X[i] - X_hat[i]);
         }
         mesh.vertices = X;
-
+		
         Collision_Handling();
         mesh.RecalculateNormals();
     }
