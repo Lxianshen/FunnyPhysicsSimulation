@@ -306,6 +306,8 @@ public class FVM : MonoBehaviour
         	vertices[vertex_number++]=X[Tet[tet*4+2]];
         	vertices[vertex_number++]=X[Tet[tet*4+3]];
         }
+
+
         Mesh mesh = GetComponent<MeshFilter> ().mesh;
 		mesh.vertices  = vertices;
 		mesh.RecalculateNormals ();
